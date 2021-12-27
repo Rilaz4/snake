@@ -1,5 +1,6 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
+#include <deque>
 
 enum Rotations
 {
@@ -39,15 +40,31 @@ class Snake
 public:
 	Snake(int x, int y, int rotation, int length)
 	{
-		
+		for (int b=0; b<length;b++)
+		{
+			if (rotation == Rotations::Up)
+				this->blocks.push_back(Block(x, y-b));
+			else if (rotation == Rotations::Right)
+				this->blocks.push_back(Block(x+b, y));
+			else if (rotation == Rotations::Down)
+				this->blocks.push_back(Block(x, y-b));
+			else if (rotation == Rotations::Left)
+				this->blocks.push_back(Block(x-b, y));
+		}
 		this->rotation = rotation;
 		this->length = length;
 	}
 
 private:
-	std::vector<Block> blocks;
+	std::deque<Block> blocks;
 	int rotation;
 	int length;
+
+public:
+	std::deque<Block> getBlocks()
+	{
+		return this->blocks;
+	}
 };
 
 class SnakeGame : public olc::PixelGameEngine
@@ -73,13 +90,13 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		drawBlocks();
+		drawSnake();
 		return true;
 	}
 
-	void drawBlocks()
+	void drawSnake()
 	{
-		for (Block block : blocks)
+		for (Block block : snake.getBlocks())
 		{
 			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT});
 		}
