@@ -105,13 +105,13 @@ public:
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override
-	{
+	{	
 		if (elapsedTotal >= 1)
 		{
 			elapsedTotal = 0;
 			Clear(olc::BLACK);
-			drawSnake();
 			updateSnake();
+			drawSnake();
 		}
 		else
 			elapsedTotal += fElapsedTime;
@@ -128,7 +128,12 @@ public:
 
 	void updateSnake()
 	{
-		snake.changeRotation(Rotations::Down);
+		if(GetKey(olc::A).bHeld) snake.changeRotation(Rotations::Left);
+		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
+		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
+		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
+		
+
 		snake.move();
 	}
 };
