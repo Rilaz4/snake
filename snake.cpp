@@ -43,13 +43,13 @@ public:
 		for (int b=0; b<length;b++)
 		{
 			if (rotation == Rotations::Up)
-				this->blocks.push_back(Block(x, y-b));
+				this->blocks.push_front(Block(x, y-b));
 			else if (rotation == Rotations::Right)
-				this->blocks.push_back(Block(x+b, y));
+				this->blocks.push_front(Block(x+b, y));
 			else if (rotation == Rotations::Down)
-				this->blocks.push_back(Block(x, y-b));
+				this->blocks.push_front(Block(x, y+b));
 			else if (rotation == Rotations::Left)
-				this->blocks.push_back(Block(x-b, y));
+				this->blocks.push_front(Block(x-b, y));
 		}
 		this->rotation = rotation;
 		this->length = length;
