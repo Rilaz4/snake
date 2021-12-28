@@ -65,6 +65,12 @@ public:
 	{
 		return this->blocks;
 	}
+	
+	void move()
+	{
+		this->blocks.pop_back();
+		this->blocks.push_front(Block(blocks[0].getX()+1, blocks[0].getY()));
+	}
 };
 
 class SnakeGame : public olc::PixelGameEngine
@@ -79,6 +85,7 @@ Snake snake =  Snake(3, 3, Rotations::Right, 3);
 std::vector<Block> blocks;
 const int BLOCK_WIDTH = ScreenWidth()/10;
 const int BLOCK_HEIGHT = ScreenHeight()/10;
+float elapsedTotal = 2;
 
 public:
 	bool OnUserCreate() override
@@ -90,7 +97,15 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		drawSnake();
+		if (elapsedTotal >= 1)
+		{
+			elapsedTotal = 0;
+			Clear(olc::BLACK);
+			drawSnake();
+			updateSnake();
+		}
+		else
+			elapsedTotal += fElapsedTime;
 		return true;
 	}
 
@@ -100,6 +115,11 @@ public:
 		{
 			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT});
 		}
+	}
+
+	void updateSnake()
+	{
+		snake.move();
 	}
 };
 
