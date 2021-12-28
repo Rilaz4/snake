@@ -82,7 +82,6 @@ public:
 	}
 public:
 Snake snake =  Snake(3, 3, Rotations::Right, 3);
-std::vector<Block> blocks;
 const int BLOCK_WIDTH = ScreenWidth()/10;
 const int BLOCK_HEIGHT = ScreenHeight()/10;
 float elapsedTotal = 2;
@@ -90,8 +89,6 @@ float elapsedTotal = 2;
 public:
 	bool OnUserCreate() override
 	{
-		blocks.push_back(Block(3, 3));
-		blocks.push_back(Block(4, 3));
 		return true;
 	}
 
