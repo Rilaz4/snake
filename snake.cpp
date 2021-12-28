@@ -69,7 +69,19 @@ public:
 	void move()
 	{
 		this->blocks.pop_back();
-		this->blocks.push_front(Block(blocks[0].getX()+1, blocks[0].getY()));
+		if (rotation == Rotations::Up)
+				this->blocks.push_front(Block(this->blocks[0].getX(), this->blocks[0].getY()-1));
+			else if (rotation == Rotations::Right)
+				this->blocks.push_front(Block(this->blocks[0].getX()+1, this->blocks[0].getY()));
+			else if (rotation == Rotations::Down)
+				this->blocks.push_front(Block(this->blocks[0].getX(), this->blocks[0].getY()+1));
+			else if (rotation == Rotations::Left)
+				this->blocks.push_front(Block(this->blocks[0].getX()-1, this->blocks[0].getY()));
+	}
+
+	void changeRotation(int newRotation)
+	{
+		this->rotation = newRotation;
 	}
 };
 
@@ -116,6 +128,7 @@ public:
 
 	void updateSnake()
 	{
+		snake.changeRotation(Rotations::Down);
 		snake.move();
 	}
 };
