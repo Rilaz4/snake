@@ -83,6 +83,15 @@ public:
 	{
 		this->rotation = newRotation;
 	}
+
+	void grow(int amount)
+	{
+		this->length += amount;
+		for (int newOnes = 0; newOnes<amount;newOnes++)
+		{
+			this->blocks.push_back(Block(blocks.end()->getX(), this->blocks.end()->getY()));
+		}
+	}
 };
 
 class SnakeGame : public olc::PixelGameEngine
@@ -132,7 +141,7 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
-		
+		if(GetKey(olc::SPACE).bHeld) snake.grow(1);	
 
 		snake.move();
 	}
