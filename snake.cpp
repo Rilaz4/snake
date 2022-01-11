@@ -87,9 +87,9 @@ public:
 	void grow(int amount)
 	{
 		this->length += amount;
-		for (int newOnes = 0; newOnes<amount;newOnes++)
+		for (int newOnes=0; newOnes<amount; newOnes++)
 		{
-			this->blocks.push_back(Block(blocks.end()->getX(), this->blocks.end()->getY()));
+			this->blocks.push_back(Block(this->blocks.back().getX(), this->blocks.back().getY()));
 		}
 	}
 };
@@ -115,6 +115,7 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{	
+		DrawString({2, 2}, std::to_string(snake.getBlocks().front().getX())+", "+std::to_string(snake.getBlocks().front().getY()));
 		if (elapsedTotal >= 1)
 		{
 			elapsedTotal = 0;
@@ -141,9 +142,9 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
-		if(GetKey(olc::SPACE).bHeld) snake.grow(1);	
 
 		snake.move();
+		if(GetKey(olc::SPACE).bHeld) snake.grow(2);	
 	}
 };
 
