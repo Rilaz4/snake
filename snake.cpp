@@ -115,7 +115,6 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{	
-		DrawString({2, 2}, std::to_string(snake.getBlocks().front().getX())+", "+std::to_string(snake.getBlocks().front().getY()));
 		if (elapsedTotal >= 1)
 		{
 			elapsedTotal = 0;
@@ -142,9 +141,9 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
+		if(GetKey(olc::SPACE).bHeld) snake.grow(2);	
 
 		snake.move();
-		if(GetKey(olc::SPACE).bHeld) snake.grow(2);	
 	}
 };
 
