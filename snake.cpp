@@ -138,7 +138,8 @@ public:
 	{	
 		if (isDead)
 		{
-			DrawString({ScreenWidth()/2, ScreenHeight()/2}, "you lost", olc::RED, 3);
+			Clear(olc::BLACK);
+			DrawString({ScreenWidth()/2-80, ScreenHeight()/2}, "you lost", olc::RED, 3);
 			return true;
 		}
 		if (elapsedTotal >= 1)
@@ -170,9 +171,15 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
-		if(GetKey(olc::SPACE).bHeld) isDead=true;
+		if(GetKey(olc::SPACE).bHeld) snake.grow(2);
 
 		snake.move();
+		for (int blockAt=1; blockAt < snake.getLength(); blockAt++)
+		{
+			Block block = snake.getBlocks().at(blockAt);
+			if (snake.getBlocks().front().getCoords() == block.getCoords())
+				isDead = true;
+		}
 	}
 };
 
