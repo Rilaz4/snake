@@ -141,9 +141,11 @@ public:
 
 	void drawSnake()
 	{
-		for (Block block : snake.getBlocks())
+		for (int blockAt=0; blockAt < snake.getLength(); blockAt++)
 		{
-			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT}, olc::GREEN);
+			Block block = snake.getBlocks().at(blockAt);
+			olc::Pixel color = (blockAt % 2 == 0)? olc::BLUE : olc::GREEN;
+			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT}, color);
 		}
 	}
 
