@@ -1,6 +1,7 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
 #include <deque>
+#include <random>
 
 enum Rotations
 {
@@ -37,6 +38,12 @@ public:
 	olc::vi2d getCoords()
 	{
 		return {this->x, this->y};
+	}
+
+	void setCoords(int newX, int newY)
+	{
+		this->x = newX;
+		this->y = newY;
 	}
 };
 
@@ -118,6 +125,9 @@ class SnakeGame : public olc::PixelGameEngine
 public:
 	SnakeGame()
 	{
+		std::random_device rd;
+		std::mt19937 mt(rd());
+		std::uniform_int_distribution<int> dist(1, 9);
 		sAppName = "Snake";
 	}
 public:
@@ -127,6 +137,10 @@ const int BLOCK_WIDTH = ScreenWidth()/10;
 const int BLOCK_HEIGHT = ScreenHeight()/10;
 float elapsedTotal = 2;
 bool isDead = false;
+
+std::random_device rd;
+std::mt19937 mt;
+std::uniform_int_distribution<int> dist;
 
 public:
 	bool OnUserCreate() override
@@ -179,6 +193,11 @@ public:
 			Block block = snake.getBlocks().at(blockAt);
 			if (snake.getBlocks().front().getCoords() == block.getCoords())
 				isDead = true;
+		}
+		if (snake.getBlocks().front().getCoords() == fruit.getCoords())
+		{
+			snake.grow(1);
+			fruit.setCoords(dist(mt), dist(mt));
 		}
 	}
 };
