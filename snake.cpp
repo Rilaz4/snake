@@ -126,6 +126,7 @@ Block fruit = Block(6, 7);
 const int BLOCK_WIDTH = ScreenWidth()/10;
 const int BLOCK_HEIGHT = ScreenHeight()/10;
 float elapsedTotal = 2;
+bool isDead = false;
 
 public:
 	bool OnUserCreate() override
@@ -135,6 +136,11 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{	
+		if (isDead)
+		{
+			DrawString({ScreenWidth()/2, ScreenHeight()/2}, "you lost", olc::RED, 3);
+			return true;
+		}
 		if (elapsedTotal >= 1)
 		{
 			elapsedTotal = 0;
@@ -164,7 +170,7 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
-		if(GetKey(olc::SPACE).bHeld) snake.grow(1);	
+		if(GetKey(olc::SPACE).bHeld) isDead=true;
 
 		snake.move();
 	}
