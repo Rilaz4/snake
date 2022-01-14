@@ -91,7 +91,16 @@ public:
 
 	void changeRotation(int newRotation)
 	{
-		this->rotation = newRotation;
+		if (this->rotation == Rotations::Up && newRotation == Rotations::Down)
+			return;
+		else if (this->rotation == Rotations::Left && newRotation == Rotations::Right)
+			return;
+		else if (this->rotation == Rotations::Down && newRotation == Rotations::Up)
+			return;
+		else if (this->rotation == Rotations::Right && newRotation == Rotations::Left)
+			return;
+		else
+			this->rotation=newRotation;
 	}
 
 	void grow(int amount)
@@ -155,7 +164,7 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
-		if(GetKey(olc::SPACE).bHeld) snake.grow(2);	
+		if(GetKey(olc::SPACE).bHeld) snake.grow(1);	
 
 		snake.move();
 	}
