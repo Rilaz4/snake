@@ -33,6 +33,11 @@ public:
 	{
 		return y;
 	}
+	
+	olc::vi2d getCoords()
+	{
+		return {this->x, this->y};
+	}
 };
 
 class Snake
@@ -64,6 +69,11 @@ public:
 	std::deque<Block> getBlocks()
 	{
 		return this->blocks;
+	}
+	
+	int getLength()
+	{
+		return this->length;
 	}
 	
 	void move()
@@ -103,6 +113,7 @@ public:
 	}
 public:
 Snake snake =  Snake(3, 3, Rotations::Right, 3);
+Block fruit = Block(6, 7);
 const int BLOCK_WIDTH = ScreenWidth()/10;
 const int BLOCK_HEIGHT = ScreenHeight()/10;
 float elapsedTotal = 2;
@@ -121,6 +132,7 @@ public:
 			Clear(olc::BLACK);
 			updateSnake();
 			drawSnake();
+			FillCircle({fruit.getX()*BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
 		}
 		else
 			elapsedTotal += fElapsedTime;
@@ -131,7 +143,7 @@ public:
 	{
 		for (Block block : snake.getBlocks())
 		{
-			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT});
+			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT}, olc::GREEN);
 		}
 	}
 
