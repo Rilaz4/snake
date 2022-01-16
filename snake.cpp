@@ -173,6 +173,7 @@ public:
 		{
 			Block block = snake.getBlocks().at(blockAt);
 			olc::Pixel color = (blockAt % 2 == 0)? olc::BLUE : olc::GREEN;
+			color = (blockAt == 0)? olc::DARK_BLUE : color;
 			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT}, color);
 		}
 	}
@@ -194,7 +195,7 @@ public:
 		}
 		if (snake.getBlocks().front().getCoords() == fruit.getCoords())
 		{
-			snake.grow(1);
+			snake.grow(4);
 			moveFruit();		
 		}
 	}
