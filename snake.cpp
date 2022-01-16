@@ -125,9 +125,7 @@ class SnakeGame : public olc::PixelGameEngine
 public:
 	SnakeGame()
 	{
-		std::random_device rd;
-		std::mt19937 mt(rd());
-		std::uniform_int_distribution<int> dist(1, 9);
+		std::uniform_int_distribution<> dist(0, 9);
 		sAppName = "Snake";
 	}
 public:
@@ -138,9 +136,8 @@ const int BLOCK_HEIGHT = ScreenHeight()/10;
 float elapsedTotal = 2;
 bool isDead = false;
 
-std::random_device rd;
-std::mt19937 mt;
-std::uniform_int_distribution<int> dist;
+std::default_random_engine gen;
+std::uniform_int_distribution<> dist;
 
 public:
 	bool OnUserCreate() override
@@ -163,6 +160,7 @@ public:
 			updateSnake();
 			drawSnake();
 			FillCircle({fruit.getX()*BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
+			DrawString(10, 10, std::to_string(fruit.getX()) + ", " + std::to_string(fruit.getY()));
 		}
 		else
 			elapsedTotal += fElapsedTime;
@@ -197,7 +195,7 @@ public:
 		if (snake.getBlocks().front().getCoords() == fruit.getCoords())
 		{
 			snake.grow(1);
-			fruit.setCoords(dist(mt), dist(mt));
+			fruit.setCoords(dist(gen)%10, dist(gen)%10);
 		}
 	}
 };
