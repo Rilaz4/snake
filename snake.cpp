@@ -195,7 +195,17 @@ public:
 		if (snake.getBlocks().front().getCoords() == fruit.getCoords())
 		{
 			snake.grow(1);
-			fruit.setCoords(dist(gen)%10, dist(gen)%10);
+			moveFruit();		
+		}
+	}
+	
+	void moveFruit()
+	{
+		fruit.setCoords(dist(gen)%10, dist(gen)%10);
+		for (Block snakeBlock : snake.getBlocks())
+		{
+			if (fruit.getCoords() == snakeBlock.getCoords())
+				moveFruit();
 		}
 	}
 };
