@@ -131,8 +131,10 @@ public:
 public:
 Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
-const int BLOCK_WIDTH = ScreenWidth()/10;
-const int BLOCK_HEIGHT = ScreenHeight()/10;
+int BLOCKS_HORIZONTAL = 10;
+int BLOCKS_COLOUMN = 10;
+int BLOCK_WIDTH;
+int BLOCK_HEIGHT;
 float elapsedTotal = 2;
 bool isDead = false;
 
@@ -142,6 +144,8 @@ std::uniform_int_distribution<> dist;
 public:
 	bool OnUserCreate() override
 	{
+		BLOCK_WIDTH = ScreenWidth()/BLOCKS_HORIZONTAL;
+		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
 		return true;
 	}
 
@@ -159,8 +163,8 @@ public:
 			Clear(olc::BLACK);
 			updateSnake();
 			drawSnake();
-			FillCircle({fruit.getX()*BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
-			DrawString(10, 10, std::to_string(fruit.getX()) + ", " + std::to_string(fruit.getY()));
+			FillCircle({fruit.getX()*BLOCK_WIDTH-BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT-BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
+			DrawString(10, 10, std::to_string(BLOCK_WIDTH));
 		}
 		else
 			elapsedTotal += fElapsedTime;
@@ -174,7 +178,7 @@ public:
 			Block block = snake.getBlocks().at(blockAt);
 			olc::Pixel color = (blockAt % 2 == 0)? olc::BLUE : olc::GREEN;
 			color = (blockAt == 0)? olc::DARK_BLUE : color;
-			FillRect({block.getX()*BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT}, color);
+			FillRect({block.getX()*BLOCK_WIDTH-BLOCK_WIDTH, block.getY()*BLOCK_HEIGHT-BLOCK_HEIGHT}, {BLOCK_WIDTH, BLOCK_HEIGHT}, color);
 		}
 	}
 
@@ -187,13 +191,16 @@ public:
 		if(GetKey(olc::SPACE).bHeld) snake.grow(2);
 
 		snake.move();
+		Block snakeHead = snake.getBlocks().front();
+		if (snakeHead.getX() > BLOCKS_HORIZONTAL || snakeHead.getX() < 1 || snakeHead.getY() > BLOCKS_COLOUMN || snakeHead.getY() < 1)
+			isDead = true;
 		for (int blockAt=1; blockAt < snake.getLength(); blockAt++)
 		{
 			Block block = snake.getBlocks().at(blockAt);
-			if (snake.getBlocks().front().getCoords() == block.getCoords())
+			if (snakeHead.getCoords() == block.getCoords())
 				isDead = true;
 		}
-		if (snake.getBlocks().front().getCoords() == fruit.getCoords())
+		if (snakeHead.getCoords() == fruit.getCoords())
 		{
 			snake.grow(4);
 			moveFruit();		
