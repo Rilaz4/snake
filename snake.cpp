@@ -3,6 +3,13 @@
 #include <deque>
 #include <random>
 
+enum GameStates
+{
+	Menu,
+	Playing,
+	Dead,
+};
+
 enum Rotations
 {
 Up,
@@ -132,12 +139,14 @@ public:
 public:
 Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
+
 int BLOCKS_HORIZONTAL = 20;
 int BLOCKS_COLOUMN = 20;
 float BLOCK_WIDTH;
 float BLOCK_HEIGHT;
+
 float elapsedTotal = 2;
-bool isDead = false;
+int gameState = GameStates::Menu;
 
 std::random_device rd;
 std::mt19937 mt;
@@ -153,7 +162,33 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{	
-		if (isDead)
+		switch (gameState)
+		{
+			case GameStates::Menu:
+				Clear(olc::BLACK);
+				DrawString(ScreenWidth()/2-100, ScreenHeight()/2, "play snake\n press space", olc::WHITE, 3);
+				gameState = (GetKey(olc::SPACE).bPressed)? GameStates::Playing : GameStates::Menu;
+				break;
+			case GameStates::Playing:
+				if (elapsedTotal >= 0.5)
+				{
+					elapsedTotal = 0;
+					Clear(olc::BLACK);
+					updateSnake();
+					drawSnake();
+					drawFruit();
+				}
+				else
+					elapsedTotal += fElapsedTime;
+				break;
+			case GameStates::Dead:
+				Clear(olc::BLACK);
+				DrawString(ScreenWidth()/2-80, ScreenHeight()/2, "you died", olc::RED, 3);
+				if (GetKey(olc::SPACE).bPressed) resetGame();
+				break;
+		}
+		DrawString(10, 10, std::to_string(gameState));
+		/*if (isDead)
 		{
 			Clear(olc::BLACK);
 			DrawString({ScreenWidth()/2-80, ScreenHeight()/2}, "you lost", olc::RED, 3);
@@ -167,10 +202,9 @@ public:
 			Clear(olc::BLACK);
 			updateSnake();
 			drawSnake();
-			FillCircle({fruit.getX()*BLOCK_WIDTH-BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT-BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
 		}
 		else
-			elapsedTotal += fElapsedTime;
+			elapsedTotal += fElapsedTime;*/
 		return true;
 	}
 
@@ -185,6 +219,11 @@ public:
 		}
 	}
 
+	void drawFruit()
+	{
+		FillCircle({fruit.getX()*BLOCK_WIDTH-BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT-BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
+	}
+		
 	void updateSnake()
 	{
 		if(GetKey(olc::A).bHeld) snake.changeRotation(Rotations::Left);
@@ -195,12 +234,12 @@ public:
 		snake.move();
 		Block snakeHead = snake.getBlocks().front();
 		if (snakeHead.getX() > BLOCKS_HORIZONTAL || snakeHead.getX() < 1 || snakeHead.getY() > BLOCKS_COLOUMN || snakeHead.getY() < 1)
-			isDead = true;
+			gameState = GameStates::Dead;
 		for (int blockAt=1; blockAt < snake.getLength(); blockAt++)
 		{
 			Block block = snake.getBlocks().at(blockAt);
 			if (snakeHead.getCoords() == block.getCoords())
-				isDead = true;
+				gameState = GameStates::Dead;
 		}
 		if (snakeHead.getCoords() == fruit.getCoords())
 		{
@@ -219,11 +258,11 @@ public:
 		}
 	}
 
-	void resetSnake()
+	void resetGame()
 	{
 		snake =  Snake(3, 3, Rotations::Right, 3);
 		fruit = Block(6, 7);
-		isDead = false;
+		gameState = GameStates::Menu;
 	}
 };
 
