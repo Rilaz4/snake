@@ -161,7 +161,7 @@ public:
 			if(GetKey(olc::SPACE).bPressed) resetSnake();
 			return true;
 		}
-		if (elapsedTotal >= 1)
+		if (elapsedTotal >= 0.5)
 		{
 			elapsedTotal = 0;
 			Clear(olc::BLACK);
