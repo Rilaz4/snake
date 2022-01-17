@@ -132,10 +132,10 @@ public:
 public:
 Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
-int BLOCKS_HORIZONTAL = 10;
-int BLOCKS_COLOUMN = 10;
-int BLOCK_WIDTH;
-int BLOCK_HEIGHT;
+int BLOCKS_HORIZONTAL = 20;
+int BLOCKS_COLOUMN = 20;
+float BLOCK_WIDTH;
+float BLOCK_HEIGHT;
 float elapsedTotal = 2;
 bool isDead = false;
 
@@ -168,7 +168,6 @@ public:
 			updateSnake();
 			drawSnake();
 			FillCircle({fruit.getX()*BLOCK_WIDTH-BLOCK_WIDTH+BLOCK_WIDTH/2, fruit.getY()*BLOCK_HEIGHT-BLOCK_HEIGHT+BLOCK_HEIGHT/2}, BLOCK_WIDTH/2, olc::RED);
-			DrawString(10, 10, std::to_string(BLOCK_WIDTH));
 		}
 		else
 			elapsedTotal += fElapsedTime;
@@ -192,7 +191,6 @@ public:
 		if(GetKey(olc::W).bHeld) snake.changeRotation(Rotations::Up);
 		if(GetKey(olc::D).bHeld) snake.changeRotation(Rotations::Right);
 		if(GetKey(olc::S).bHeld) snake.changeRotation(Rotations::Down);
-		if(GetKey(olc::SPACE).bHeld) snake.grow(2);
 
 		snake.move();
 		Block snakeHead = snake.getBlocks().front();
