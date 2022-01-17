@@ -155,6 +155,8 @@ public:
 		{
 			Clear(olc::BLACK);
 			DrawString({ScreenWidth()/2-80, ScreenHeight()/2}, "you lost", olc::RED, 3);
+			DrawString(1, 1, std::to_string(isDead));
+			if(GetKey(olc::SPACE).bPressed) resetSnake();
 			return true;
 		}
 		if (elapsedTotal >= 1)
@@ -215,6 +217,13 @@ public:
 			if (fruit.getCoords() == snakeBlock.getCoords())
 				moveFruit();
 		}
+	}
+
+	void resetSnake()
+	{
+		snake =  Snake(3, 3, Rotations::Right, 3);
+		fruit = Block(6, 7);
+		isDead = false;
 	}
 };
 
