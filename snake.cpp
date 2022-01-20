@@ -1,5 +1,6 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
+#include "button.h"
 #include <deque>
 #include <random>
 
@@ -140,6 +141,7 @@ public:
 Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
 
+Button startButton = Button({0, 0}, {80, 24}, "play", olc::WHITE, 2); 
 int BLOCKS_HORIZONTAL = 20;
 int BLOCKS_COLOUMN = 20;
 float BLOCK_WIDTH;
@@ -157,6 +159,7 @@ public:
 	{
 		BLOCK_WIDTH = ScreenWidth()/BLOCKS_HORIZONTAL;
 		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
+		startButton.pos = {ScreenWidth()/2-40, ScreenHeight()/2-12};
 		return true;
 	}
 
@@ -166,8 +169,9 @@ public:
 		{
 			case GameStates::Menu:
 				Clear(olc::BLACK);
-				DrawString(ScreenWidth()/2-100, ScreenHeight()/2, "play snake\n press space", olc::WHITE, 3);
-				gameState = (GetKey(olc::SPACE).bPressed)? GameStates::Playing : GameStates::Menu;
+				DrawString(ScreenWidth()/2-100, ScreenHeight()/2-60, "play snake", olc::WHITE, 3);
+				startButton.draw();
+				gameState = (startButton.pressed())? GameStates::Playing : GameStates::Menu;
 				break;
 			case GameStates::Playing:
 				if (elapsedTotal >= 0.5)
@@ -187,24 +191,6 @@ public:
 				if (GetKey(olc::SPACE).bPressed) resetGame();
 				break;
 		}
-		DrawString(10, 10, std::to_string(gameState));
-		/*if (isDead)
-		{
-			Clear(olc::BLACK);
-			DrawString({ScreenWidth()/2-80, ScreenHeight()/2}, "you lost", olc::RED, 3);
-			DrawString(1, 1, std::to_string(isDead));
-			if(GetKey(olc::SPACE).bPressed) resetSnake();
-			return true;
-		}
-		if (elapsedTotal >= 0.5)
-		{
-			elapsedTotal = 0;
-			Clear(olc::BLACK);
-			updateSnake();
-			drawSnake();
-		}
-		else
-			elapsedTotal += fElapsedTime;*/
 		return true;
 	}
 
