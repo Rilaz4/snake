@@ -2,7 +2,6 @@
 #include "olcPixelGameEngine.h"
 #include "button.h"
 #include <deque>
-#include <random>
 
 enum GameStates
 {
@@ -133,8 +132,6 @@ class SnakeGame : public olc::PixelGameEngine
 public:
 	SnakeGame()
 	{
-		std::mt19937 mt(rd());
-		std::uniform_int_distribution<> dist(0, 9);
 		sAppName = "Snake";
 	}
 public:
@@ -142,21 +139,18 @@ Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
 
 Button startButton = Button({0, 0}, {80, 24}, "play", olc::WHITE, 2); 
-int BLOCKS_HORIZONTAL = 20;
-int BLOCKS_COLOUMN = 20;
+int BLOCKS_HORIZONTAL = 10;
+int BLOCKS_COLOUMN = 10;
 float BLOCK_WIDTH;
 float BLOCK_HEIGHT;
 
 float elapsedTotal = 2;
 int gameState = GameStates::Menu;
 
-std::random_device rd;
-std::mt19937 mt;
-std::uniform_int_distribution<> dist;
-
 public:
 	bool OnUserCreate() override
 	{
+		std::srand(std::time(NULL));
 		BLOCK_WIDTH = ScreenWidth()/BLOCKS_HORIZONTAL;
 		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
 		startButton.pos = {ScreenWidth()/2-40, ScreenHeight()/2-12};
@@ -236,7 +230,7 @@ public:
 	
 	void moveFruit()
 	{
-		fruit.setCoords(dist(mt)%BLOCKS_HORIZONTAL+1, dist(mt)%BLOCKS_COLOUMN+1);
+		fruit.setCoords(std::rand()%BLOCKS_HORIZONTAL+1, std::rand()%BLOCKS_COLOUMN+1);
 		for (Block snakeBlock : snake.getBlocks())
 		{
 			if (fruit.getCoords() == snakeBlock.getCoords())
