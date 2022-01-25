@@ -18,6 +18,13 @@ Down,
 Left
 };
 
+enum Speeds
+{
+Slow = 1,
+Medium = 2,
+Fast = 4
+};
+
 class Block
 {
 public:
@@ -146,6 +153,7 @@ float BLOCK_HEIGHT;
 
 float elapsedTotal = 2;
 int gameState = GameStates::Menu;
+float gameSpeed = Speeds::Fast;
 
 public:
 	bool OnUserCreate() override
@@ -168,7 +176,7 @@ public:
 				gameState = (startButton.pressed())? GameStates::Playing : GameStates::Menu;
 				break;
 			case GameStates::Playing:
-				if (elapsedTotal >= 0.5)
+				if (elapsedTotal >= 1/gameSpeed)
 				{
 					elapsedTotal = 0;
 					Clear(olc::BLACK);
