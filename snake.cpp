@@ -10,6 +10,12 @@ enum GameStates
 	Dead,
 };
 
+enum MenuStates
+{
+	Main,
+	SpeedSelect,
+};
+
 enum Rotations
 {
 Up,
@@ -146,6 +152,7 @@ Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
 
 Button startButton = Button({0, 0}, {80, 24}, "play", olc::WHITE, 2); 
+Button speedSelect1 = Button({0, 0}, {80, 24}, "slow", olc::WHITE, 2);
 int BLOCKS_HORIZONTAL = 10;
 int BLOCKS_COLOUMN = 10;
 float BLOCK_WIDTH;
@@ -153,7 +160,8 @@ float BLOCK_HEIGHT;
 
 float elapsedTotal = 2;
 int gameState = GameStates::Menu;
-float gameSpeed = Speeds::Fast;
+int menuState = MenuStates::Main;
+float snakeSpeed = Speeds::Fast;
 
 public:
 	bool OnUserCreate() override
@@ -162,6 +170,7 @@ public:
 		BLOCK_WIDTH = ScreenWidth()/BLOCKS_HORIZONTAL;
 		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
 		startButton.pos = {ScreenWidth()/2-40, ScreenHeight()/2-12};
+		speedSelect1.pos = {ScreenWidth()/2-85, ScreenHeight()/2-12};
 		return true;
 	}
 
@@ -170,13 +179,30 @@ public:
 		switch (gameState)
 		{
 			case GameStates::Menu:
-				Clear(olc::BLACK);
-				DrawString(ScreenWidth()/2-100, ScreenHeight()/2-60, "play snake", olc::WHITE, 3);
-				startButton.draw();
-				gameState = (startButton.pressed())? GameStates::Playing : GameStates::Menu;
+				switch (menuState)
+				{
+					case MenuStates::Main:
+						{
+							Clear(olc::BLACK);
+							olc::vi2d playTextSize = GetTextSize("Play Snake");
+							DrawString(ScreenWidth()/2-playTextSize.x/2*3, ScreenHeight()/3-playTextSize.y/2*3, "play snake", olc::WHITE, 3);
+							startButton.draw();
+							menuState = (startButton.pressed())? MenuStates::SpeedSelect : MenuStates::Main;
+							break;
+						}
+					case MenuStates::SpeedSelect:
+						{
+							Clear(olc::BLACK);
+							olc::vi2d speedTextSize = GetTextSize("Select Speed");
+							DrawString(ScreenWidth()/2-speedTextSize.x/2*3, ScreenHeight()/3-speedTextSize.y/2*3, "Select Speed", olc::WHITE, 3);
+							speedSelect1.draw();
+							if(speedSelect1.pressed()) startGame(Speeds::Slow);
+							break;
+						}
+				}
 				break;
 			case GameStates::Playing:
-				if (elapsedTotal >= 1/gameSpeed)
+				if (elapsedTotal >= 1/snakeSpeed)
 				{
 					elapsedTotal = 0;
 					Clear(olc::BLACK);
@@ -195,6 +221,13 @@ public:
 		}
 		return true;
 	}
+
+	void startGame(int selectedSpeed)
+	{
+		snakeSpeed = selectedSpeed;
+		gameState = GameStates::Playing;
+	}
+
 
 	void drawSnake()
 	{
