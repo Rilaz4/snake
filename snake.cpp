@@ -3,6 +3,9 @@
 #include "button.h"
 #include <deque>
 
+const int SCREEN_WIDTH = 400;
+const int SCREEN_HEIGHT = 400;
+
 enum GameStates
 {
 	Menu,
@@ -153,6 +156,8 @@ Block fruit = Block(6, 7);
 
 Button startButton = Button({0, 0}, {80, 24}, "play", olc::WHITE, 2); 
 Button speedSelect1 = Button({0, 0}, {80, 24}, "slow", olc::WHITE, 2);
+Button speedSelect2 = Button({0, 0}, {94, 24}, "medium", olc::WHITE, 2);
+Button speedSelect3 = Button({0, 0}, {80, 24}, "fast", olc::WHITE, 2);
 int BLOCKS_HORIZONTAL = 10;
 int BLOCKS_COLOUMN = 10;
 float BLOCK_WIDTH;
@@ -169,8 +174,10 @@ public:
 		std::srand(std::time(NULL));
 		BLOCK_WIDTH = ScreenWidth()/BLOCKS_HORIZONTAL;
 		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
-		startButton.pos = {ScreenWidth()/2-40, ScreenHeight()/2-12};
-		speedSelect1.pos = {ScreenWidth()/2-85, ScreenHeight()/2-12};
+		startButton.pos = {SCREEN_WIDTH/2-40, SCREEN_HEIGHT/2-12};
+		speedSelect1.pos = {SCREEN_WIDTH/3-85, SCREEN_HEIGHT/2-12};
+		speedSelect2.pos = {SCREEN_WIDTH/2-45, SCREEN_HEIGHT/2-12};
+		speedSelect3.pos = {SCREEN_WIDTH-SCREEN_WIDTH/3, SCREEN_HEIGHT/2-12};
 		return true;
 	}
 
@@ -196,7 +203,11 @@ public:
 							olc::vi2d speedTextSize = GetTextSize("Select Speed");
 							DrawString(ScreenWidth()/2-speedTextSize.x/2*3, ScreenHeight()/3-speedTextSize.y/2*3, "Select Speed", olc::WHITE, 3);
 							speedSelect1.draw();
+							speedSelect2.draw();
+							speedSelect3.draw();
 							if(speedSelect1.pressed()) startGame(Speeds::Slow);
+							if(speedSelect2.pressed()) startGame(Speeds::Medium);
+							if(speedSelect3.pressed()) startGame(Speeds::Fast);
 							break;
 						}
 				}
@@ -291,7 +302,7 @@ int main()
 
 {
 	SnakeGame game;
-	if (game.Construct(400, 400, 1, 1))
+	if (game.Construct(SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1))
 		game.Start();
 	return 0;
 }
