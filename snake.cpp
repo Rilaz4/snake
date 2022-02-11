@@ -156,7 +156,7 @@ Block fruit = Block(6, 7);
 
 Button startButton = Button({0, 0}, {80, 24}, "play", olc::WHITE, 2); 
 Button speedSelect1 = Button({0, 0}, {80, 24}, "slow", olc::WHITE, 2);
-Button speedSelect2 = Button({0, 0}, {94, 24}, "medium", olc::WHITE, 2);
+Button speedSelect2 = Button({0, 0}, {98, 24}, "medium", olc::WHITE, 2);
 Button speedSelect3 = Button({0, 0}, {80, 24}, "fast", olc::WHITE, 2);
 int BLOCKS_HORIZONTAL = 10;
 int BLOCKS_COLOUMN = 10;
@@ -176,7 +176,7 @@ public:
 		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
 		startButton.pos = {SCREEN_WIDTH/2-40, SCREEN_HEIGHT/2-12};
 		speedSelect1.pos = {SCREEN_WIDTH/3-85, SCREEN_HEIGHT/2-12};
-		speedSelect2.pos = {SCREEN_WIDTH/2-45, SCREEN_HEIGHT/2-12};
+		speedSelect2.pos = {SCREEN_WIDTH/2-49, SCREEN_HEIGHT/2-12};
 		speedSelect3.pos = {SCREEN_WIDTH-SCREEN_WIDTH/3, SCREEN_HEIGHT/2-12};
 		return true;
 	}
@@ -237,6 +237,7 @@ public:
 	{
 		snakeSpeed = selectedSpeed;
 		gameState = GameStates::Playing;
+		menuState = MenuStates::Main;
 	}
 
 
