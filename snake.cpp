@@ -17,6 +17,7 @@ enum MenuStates
 {
 	Main,
 	SpeedSelect,
+	MapSizeSelect,
 };
 
 enum Rotations
@@ -27,12 +28,23 @@ Down,
 Left
 };
 
-enum Speeds
-{
-Slow = 1,
-Medium = 2,
-Fast = 4
-};
+namespace Speeds {
+	enum Speeds	
+	{
+		Slow = 1,
+		Medium = 2,
+		Fast = 4
+	};
+}
+
+namespace MapSizes {
+	enum MapSizes
+	{
+		Small = 10,
+		Medium = 15,
+		Large = 20,
+	};
+}
 
 class Block
 {
@@ -155,9 +167,12 @@ Snake snake =  Snake(3, 3, Rotations::Right, 3);
 Block fruit = Block(6, 7);
 
 Button startButton = Button({0, 0}, {80, 24}, "play", olc::WHITE, 2); 
-Button speedSelect1 = Button({0, 0}, {80, 24}, "slow", olc::WHITE, 2);
-Button speedSelect2 = Button({0, 0}, {98, 24}, "medium", olc::WHITE, 2);
-Button speedSelect3 = Button({0, 0}, {80, 24}, "fast", olc::WHITE, 2);
+Button speedSelect1 = Button({0, 0}, {80, 24}, "Slow", olc::WHITE, 2);
+Button speedSelect2 = Button({0, 0}, {98, 24}, "Medium", olc::WHITE, 2);
+Button speedSelect3 = Button({0, 0}, {80, 24}, "Fast", olc::WHITE, 2);
+Button sizeSelect1 = Button({0, 0}, {80, 24}, "Small", olc::WHITE, 2);
+Button sizeSelect2 = Button({0, 0}, {98, 24}, "Medium", olc::WHITE, 2);
+Button sizeSelect3 = Button({0, 0}, {80, 24}, "Large", olc::WHITE, 2);
 int BLOCKS_HORIZONTAL = 10;
 int BLOCKS_COLOUMN = 10;
 float BLOCK_WIDTH;
@@ -178,6 +193,9 @@ public:
 		speedSelect1.pos = {SCREEN_WIDTH/3-85, SCREEN_HEIGHT/2-12};
 		speedSelect2.pos = {SCREEN_WIDTH/2-49, SCREEN_HEIGHT/2-12};
 		speedSelect3.pos = {SCREEN_WIDTH-SCREEN_WIDTH/3, SCREEN_HEIGHT/2-12};
+		sizeSelect1.pos = {SCREEN_WIDTH/3-85, SCREEN_HEIGHT/2-12};
+		sizeSelect2.pos = {SCREEN_WIDTH/2-49, SCREEN_HEIGHT/2-12};
+		sizeSelect3.pos = {SCREEN_WIDTH-SCREEN_WIDTH/3, SCREEN_HEIGHT/2-12};
 		return true;
 	}
 
@@ -205,9 +223,22 @@ public:
 							speedSelect1.draw();
 							speedSelect2.draw();
 							speedSelect3.draw();
-							if(speedSelect1.pressed()) startGame(Speeds::Slow);
-							if(speedSelect2.pressed()) startGame(Speeds::Medium);
-							if(speedSelect3.pressed()) startGame(Speeds::Fast);
+							if(speedSelect1.pressed()) {snakeSpeed = Speeds::Slow; menuState = MenuStates::MapSizeSelect;}
+							if(speedSelect2.pressed()) {snakeSpeed = Speeds::Medium; menuState = MenuStates::MapSizeSelect;}
+							if(speedSelect3.pressed()) {snakeSpeed = Speeds::Fast; menuState = MenuStates::MapSizeSelect;}
+							break;
+						}
+					case MenuStates::MapSizeSelect:
+						{
+							Clear(olc::BLACK);
+							olc::vi2d sizeTextSize = GetTextSize("Select Size");
+							DrawString(ScreenWidth()/2-sizeTextSize.x/2*3, ScreenHeight()/3-sizeTextSize.y/2*3, "Select Size", olc::WHITE, 3);
+							sizeSelect1.draw();
+							sizeSelect2.draw();
+							sizeSelect3.draw();
+							if(sizeSelect1.pressed()) {setMapSize(MapSizes::Small, MapSizes::Small); startGame();};
+							if(sizeSelect2.pressed()) {setMapSize(MapSizes::Medium, MapSizes::Medium); startGame();};
+							if(sizeSelect3.pressed()) {setMapSize(MapSizes::Large, MapSizes::Large); startGame();};
 							break;
 						}
 				}
@@ -233,9 +264,17 @@ public:
 		return true;
 	}
 
-	void startGame(int selectedSpeed)
+	void setMapSize(int sizeX, int sizeY)
 	{
-		snakeSpeed = selectedSpeed;
+		BLOCKS_HORIZONTAL = sizeX;
+		BLOCKS_COLOUMN = sizeY;
+		BLOCK_WIDTH = ScreenWidth()/BLOCKS_HORIZONTAL;
+		BLOCK_HEIGHT = ScreenHeight()/BLOCKS_COLOUMN;
+	}
+
+
+	void startGame()
+	{
 		gameState = GameStates::Playing;
 		menuState = MenuStates::Main;
 	}
